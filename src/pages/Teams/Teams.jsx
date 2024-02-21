@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useApi } from "@hooks";
+import { navigate } from "@store"; 
 import stiles from "./Teams.module.css";
 
 const Teams = () => {
@@ -11,6 +12,11 @@ const Teams = () => {
   const handleBackButtonClick = () => {
     window.history.back();
   };
+
+  const handleAddButtonClick = () => {
+    navigate("/addteams");
+  };
+  
 
   useEffect(() => {
     const fetchTeams = async () => {
@@ -32,6 +38,7 @@ const Teams = () => {
       <div className={stiles.styles}>
         <h1>Teams</h1>
         <button onClick={handleBackButtonClick}>Back</button>
+        <button onClick={handleAddButtonClick}>Add Team</button>
       </div>
 
       {loading ? (
