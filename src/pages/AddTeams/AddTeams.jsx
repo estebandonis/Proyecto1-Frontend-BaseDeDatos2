@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useApi } from "@hooks";
-import { navigate } from "@store"; // Asegúrate de importar correctamente desde tu store
+import { navigate } from "@store";
 
 const AddTeam = () => {
   const { apiUrl } = useApi();
