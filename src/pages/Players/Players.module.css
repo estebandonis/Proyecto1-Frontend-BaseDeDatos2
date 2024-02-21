@@ -6,6 +6,10 @@
     right: 0px;
     bottom: 0px;
     left: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: space between;
+    flex-direction: column;
 }
 
 .styles {
