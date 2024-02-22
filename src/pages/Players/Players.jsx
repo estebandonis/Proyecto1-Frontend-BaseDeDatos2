@@ -3,11 +3,12 @@ import axios from "axios";
 import { useApi } from "@hooks";
 import stiles from "./Players.module.css";
 
-const ITEMS_PER_PAGE = 20;
+const ITEMS_PER_PAGE = 15;
 
 const Players = () => {
   const { apiUrl } = useApi();
   const [players, setPlayers] = useState([]);
+  const [createPlayer, setCreatePlayer] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
 
   const handleBackButtonClick = () => {
@@ -44,13 +45,173 @@ const Players = () => {
     (currentPage + 1) * ITEMS_PER_PAGE,
   );
 
+  const deletePlayer = async (firstName, lastName) => {
+    await axios
+      .post(`${apiUrl}/players/delete`, {
+        name: { first_name: firstName, last_name: lastName },
+      })
+      .then(() => {
+        alert("Player Deleted");
+        reson();
+      })
+      .catch((error) => {
+        // Handle the error
+        console.log("An error occurred while retrieving data", error);
+      });
+  };
+
+  const [formData, setFormData] = useState({
+    name: {
+      first_name: "",
+      last_name: "",
+    },
+    position: "",
+    height: {
+      height_feet: "",
+      height_inches: "",
+    },
+    weight_pounds: "",
+    stats: "",
+    team: "",
+  });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // prevent default form submission
+
+    try {
+      await axios.post(`${apiUrl}/players/create`, formData);
+      reson();
+      setCreatePlayer(false);
+      alert("Se ha agregado el jugador exitosamente");
+    } catch (error) {
+      // handle error here
+      alert("No se pudo agregar el jugador", error);
+    }
+  };
+
   return (
     <div className={stiles.bigStyles}>
       <h1>Players</h1>
+      <div className={stiles.botonesSection}>
+        <button onClick={handleBackButtonClick}>Back To Main</button>
+        <button onClick={() => setCreatePlayer(true)}>Create</button>
+        <button onClick={() => setCreatePlayer(false)}>Show Players</button>
+      </div>
 
-      <button onClick={handleBackButtonClick}>Back</button>
+      {createPlayer == true ? (
+        <div className={stiles.createPlayerSection}>
+          <form>
+            <label>
+              First Name:
+              <input
+                type="text"
+                name="first_name"
+                value={formData.name.first_name}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    name: { ...formData.name, first_name: e.target.value },
+                  })
+                }
+              />
+            </label>
+            <label>
+              Last Name:
+              <input
+                type="text"
+                name="last_name"
+                value={formData.name.last_name}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    name: { ...formData.name, last_name: e.target.value },
+                  })
+                }
+              />
+            </label>
+            <label>
+              Height Feet:
+              <input
+                type="text"
+                name="height_feet"
+                value={formData.height.height_feet}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    height: { ...formData.height, height_feet: e.target.value },
+                  })
+                }
+              />
+            </label>
+            <label>
+              Height Inches:
+              <input
+                type="text"
+                name="height_inches"
+                value={formData.height.height_inches}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    height: {
+                      ...formData.height,
+                      height_inches: e.target.value,
+                    },
+                  })
+                }
+              />
+            </label>
+            <label>
+              Weight Pounds:
+              <input
+                type="text"
+                name="weight_pounds"
+                value={formData.weight_pounds}
+                onChange={(e) =>
+                  setFormData({ ...formData, weight_pounds: e.target.value })
+                }
+              />
+            </label>
+            <label>
+              Position:
+              <input
+                type="text"
+                name="position"
+                value={formData.position}
+                onChange={(e) =>
+                  setFormData({ ...formData, position: e.target.value })
+                }
+              />
+            </label>
+            <label>
+              Stats:
+              <input
+                type="text"
+                name="stats"
+                value={formData.stats}
+                onChange={(e) =>
+                  setFormData({ ...formData, stats: e.target.value })
+                }
+              />
+            </label>
+            <label>
+              Team:
+              <input
+                type="text"
+                name="team"
+                value={formData.team}
+                onChange={(e) =>
+                  setFormData({ ...formData, team: e.target.value })
+                }
+              />
+            </label>
+            <button type="submit" onClick={handleSubmit}>
+              Create
+            </button>
+          </form>
+        </div>
+      ) : null}
 
-      {players && players.length > 0 ? (
+      {players && players.length > 0 && createPlayer == false ? (
         <div className={stiles.styles}>
           <div className={stiles.stylesBotones}>
             <button onClick={handleBackButton} disabled={currentPage === 0}>
@@ -87,6 +248,27 @@ const Players = () => {
                   <td>{player.position}</td>
                   <td>{player.stats[0]}</td>
                   <td>{player.weight_pounds}</td>
+                  <td>
+                    <div>
+                      <button
+                        style={{ backgroundColor: "red" }}
+                        onClick={async () => {
+                          deletePlayer(
+                            player.name.first_name,
+                            player.name.last_name,
+                          );
+                        }}
+                      >
+                        eliminar
+                      </button>
+                      <button
+                        style={{ backgroundColor: "grey" }}
+                        onClick={async () => {}}
+                      >
+                        En espera
+                      </button>
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>

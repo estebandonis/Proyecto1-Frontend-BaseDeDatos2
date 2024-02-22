@@ -6,6 +6,8 @@
     right: 0px;
     bottom: 0px;
     left: 0px;
+    width: 100%;
+    height: 1200px;
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -24,4 +26,18 @@
     display: flex;
     justify-content: center;
     flex-direction: row;
+}
+
+.botonesSection {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.createPlayerSection {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
 }
