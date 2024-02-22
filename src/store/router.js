@@ -6,5 +6,4 @@ export default createRouter([
   ["/players", () => ({ page: "players" })],
   ["/teams", () => ({ page: "teams" })],
   ["/addteams", () => ({ page: "addteams" })], 
-  ["/updateteam/:id", ({ params }) => ({ page: "updateteam", id: params.id })],
 ]);
