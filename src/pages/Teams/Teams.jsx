@@ -8,6 +8,18 @@ const Teams = () => {
   const { apiUrl } = useApi();
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedTeam, setSelectedTeam] = useState(null);
+  const [updatedTeam, setUpdatedTeam] = useState({
+    name: "",
+    abbreviation: "",
+    conference: "",
+    division: "",
+    city: "",
+    arena: "",
+    founded: "",
+    logo: ""
+  });
 
   const handleBackButtonClick = () => {
     window.history.back();
@@ -16,20 +28,55 @@ const Teams = () => {
   const handleAddButtonClick = () => {
     navigate("/addteams");
   };
+
+  const handleUpdateButtonClick = (team) => {
+    setSelectedTeam(team);
+    setUpdatedTeam(team);
+  };
   
+  const handleDeleteButtonClick = async (id) => {
+    try {
+      await axios.delete(`${apiUrl}/teams/delete/${id}`);
+      // Después de eliminar el equipo, volvemos a cargar la lista de equipos
+      fetchTeams();
+    } catch (error) {
+      console.log("An error occurred while deleting team", error);
+    }
+  };
+
+  const fetchTeams = async () => {
+    try {
+      const response = await axios.get(`${apiUrl}/teams`);
+      setTeams(response.data);
+    } catch (error) {
+      console.log("An error occurred while retrieving data", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSearch = async () => {
+    try {
+      const response = await axios.get(`${apiUrl}/teams/find`, {
+        params: { name: searchTerm }
+      });
+      setTeams(response.data);
+    } catch (error) {
+      console.log("An error occurred while searching for teams", error);
+    }
+  };
+
+  const handleSave = async () => {
+    try {
+      await axios.put(`${apiUrl}/teams/update/${selectedTeam._id}`, updatedTeam);
+      fetchTeams();
+      setSelectedTeam(null); // Limpiar el equipo seleccionado después de guardar
+    } catch (error) {
+      console.log("An error occurred while updating team", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchTeams = async () => {
-      try {
-        const response = await axios.get(`${apiUrl}/teams`);
-        console.log("datos", response)
-        setTeams(response.data);
-      } catch (error) {
-        console.log("An error occurred while retrieving data", error);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchTeams();
   }, [apiUrl]);
 
@@ -39,11 +86,74 @@ const Teams = () => {
         <h1>Teams</h1>
         <button onClick={handleBackButtonClick}>Back</button>
         <button onClick={handleAddButtonClick}>Add Team</button>
+        <input
+          type="text"
+          placeholder="Search by team name"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <button onClick={handleSearch}>Search</button>
       </div>
+
+      {selectedTeam ? (
+        <div>
+          <h2>Update Team</h2>
+          <form>
+            <label>Nombre:</label>
+            <input
+              type="text"
+              value={updatedTeam.name}
+              onChange={(e) => setUpdatedTeam({ ...updatedTeam, name: e.target.value })}
+            />
+            <label>Abreviacion:</label>
+            <input
+              type="text"
+              value={updatedTeam.abbreviation}
+              onChange={(e) => setUpdatedTeam({ ...updatedTeam, abbreviation: e.target.value })}
+            />
+            <label>Conferencia:</label>
+            <input
+              type="text"
+              value={updatedTeam.conference}
+              onChange={(e) => setUpdatedTeam({ ...updatedTeam, conference: e.target.value })}
+            />
+            <label>Division:</label>
+            <input
+              type="text"
+              value={updatedTeam.division}
+              onChange={(e) => setUpdatedTeam({ ...updatedTeam, division: e.target.value })}
+            />
+            <label>Ciudad:</label>
+            <input
+              type="text"
+              value={updatedTeam.city}
+              onChange={(e) => setUpdatedTeam({ ...updatedTeam, city: e.target.value })}
+            />
+            <label>Arena:</label>
+            <input
+              type="text"
+              value={updatedTeam.arena}
+              onChange={(e) => setUpdatedTeam({ ...updatedTeam, arena: e.target.value })}
+            />
+            <label>Fundada:</label>
+            <input
+              type="text"
+              value={updatedTeam.founded}
+              onChange={(e) => setUpdatedTeam({ ...updatedTeam, founded: e.target.value })}
+            />
+            <label>Logo:</label>
+            <input
+              type="text"
+              value={updatedTeam.logo}
+              onChange={(e) => setUpdatedTeam({ ...updatedTeam, logo: e.target.value })}
+            />
+            <button type="button" onClick={handleSave}>Guardar</button>
+          </form>
+        </div>
+      ) : null}
 
       {loading ? (
         <p>Loading...</p>
-        
       ) : (
         <table>
           <thead>
@@ -56,10 +166,11 @@ const Teams = () => {
               <th>Arena</th>
               <th>Fundada</th>
               <th>Logo</th>
+              <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
-          {Array.isArray(teams) && teams.map((team) => (
+            {teams.map((team) => (
               <tr key={team._id}>
                 <td>{team.name}</td>
                 <td>{team.abbreviation}</td>
@@ -70,6 +181,10 @@ const Teams = () => {
                 <td>{team.founded}</td>
                 <td>
                   <img src={team.logo} alt={`${team.name} Logo`} />
+                </td>
+                <td>
+                  <button onClick={() => handleUpdateButtonClick(team)}>Actualizar</button>
+                  <button onClick={() => handleDeleteButtonClick(team._id)} style={{ backgroundColor: 'red' }}>Eliminar</button>
                 </td>
               </tr>
             ))}
