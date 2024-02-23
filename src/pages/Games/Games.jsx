@@ -5,7 +5,7 @@ import stiles from "./Games.module.css";
 
 const ITEMS_PER_PAGE = 15;
 const FORM_DEFAULT = {
-      _id: "",
+      // _id: "",
       date : "",
       season : "",
       period : "",
@@ -24,7 +24,7 @@ const FORM_DEFAULT = {
 const Games = () => {
   const { apiUrl } = useApi();
   const [games, setGames] = useState([]);
-  const [insertGame, setInsertGame] = useState(false);
+  const [submitGame, setSubmitGame] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
 
   const [formData, setFormData] = useState(FORM_DEFAULT)
@@ -37,7 +37,15 @@ const Games = () => {
   const handleBackButtonClick = () => {
     window.history.back();
   };
+  
+  const handleBackButton = () => {
+    setCurrentPage((oldPage) => Math.max(oldPage - 1, 0));
+  };
 
+  const handleNextButton = () => {
+    setCurrentPage((oldPage) => oldPage + 1);
+  };
+  
   const deleteGame = async (id) => {
     try {
       await axios.delete(`${apiUrl}/teams/delete/${id}`);
@@ -50,7 +58,7 @@ const Games = () => {
 
   const updateGame = (game) => {
     setFormData(game);
-    setInsertGame(true);
+    setSubmitGame(true);
   };
 
   const handleSubmit = async (e) => {
@@ -63,7 +71,7 @@ const Games = () => {
         await axios.put(`${apiUrl}/games/update`, formData);
       }
       reson();
-      setInsertGame(false);
+      setSubmitGame(false);
       setFormData(FORM_DEFAULT);
       alert("Se ha agregado el jugador exitosamente");
     } catch (error) {
@@ -76,7 +84,7 @@ const Games = () => {
     await axios
       .get(`${apiUrl}/games/find`)
       .then((response) => {
-        setPlayers(response.data);
+        setGames(response.data);
         console.log(response.data);
       })
       .catch((error) => {
@@ -96,12 +104,12 @@ const Games = () => {
       </div>
       <div className={stiles.botonesSection}>
         <button onClick={handleBackButtonClick}>Back To Main</button>
-        <button onClick={() => setInsertGame(!insertGame)}>Insert</button>
-        <button onClick={() => setInsertGame(false)}>Show Players</button>
+        <button onClick={() => setSubmitGame(!submitGame)}>Insert</button>
+        <button onClick={() => setSubmitGame(false)}>Show Players</button>
       </div>
 
-      {insertGame == true ? (
-        <div className={stiles.styles}>
+      {submitGame == true ? (
+        <div>
           <form>
             <label>
               Date:
@@ -195,9 +203,9 @@ const Games = () => {
         </div>
       ) : null}
 
-      {games && games.length > 0 && insertGame == false ? (
-        <div className={stiles.styles}>
-          <div className={stiles.stylesBotones}>
+      {games && games.length > 0 && submitGame == false ? (
+        <div>
+          <div>
             <button onClick={handleBackButton} disabled={currentPage === 0}>
               Back
             </button>
