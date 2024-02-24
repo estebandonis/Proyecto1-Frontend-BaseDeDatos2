@@ -11,11 +11,27 @@ const Players = () => {
   const [createPlayer, setCreatePlayer] = useState(false);
   const [editPlayer, setEditPlayer] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
+  const [searchTerm, setSearchTerm] = useState("");
   const [beforeName, setBeforeName] = useState({
     name: {
       first_name: "",
       last_name: "",
     },
+  });
+  const [formData, setFormData] = useState({
+    name: {
+      first_name: "",
+      last_name: "",
+    },
+    position: "",
+    height: {
+      height_feet: "",
+      height_inches: "",
+    },
+    weight_pounds: "",
+    stats: "",
+    team: "",
+    newTeam: "",
   });
 
   const handleBackButtonClick = () => {
@@ -37,6 +53,10 @@ const Players = () => {
   useEffect(() => {
     reson();
   }, []);
+
+  useEffect(() => {
+    console.log(formData);
+  }, [formData]);
 
   const handleBackButton = () => {
     setCurrentPage((oldPage) => Math.max(oldPage - 1, 0));
@@ -66,21 +86,6 @@ const Players = () => {
       });
   };
 
-  const [formData, setFormData] = useState({
-    name: {
-      first_name: "",
-      last_name: "",
-    },
-    position: "",
-    height: {
-      height_feet: "",
-      height_inches: "",
-    },
-    weight_pounds: "",
-    stats: "",
-    team: "",
-  });
-
   const handleSubmit = async (e) => {
     e.preventDefault(); // prevent default form submission
 
@@ -98,13 +103,17 @@ const Players = () => {
   const handleSubmitUpdate = async (e) => {
     e.preventDefault(); // prevent default form submission
     try {
+      console.log(formData);
+      console.log(formData.team);
+      console.log(formData.team_id);
       await axios.put(`${apiUrl}/players/update`, {
         name: formData.name,
         position: formData.position,
         height: formData.height,
         weight_pounds: formData.weight_pounds,
         stats: formData.stats,
-        team: formData.team,
+        team: formData.team_id,
+        newTeam: formData.newTeam,
         beforeName: beforeName,
       });
       reson();
@@ -116,7 +125,42 @@ const Players = () => {
     }
   };
 
+  const resetFormData = () => {
+    setFormData({
+      name: {
+        first_name: "",
+        last_name: "",
+      },
+      position: "",
+      height: {
+        height_feet: "",
+        height_inches: "",
+      },
+      weight_pounds: "",
+      stats: "",
+      team: "",
+      newTeam: "",
+    });
+  };
+
+  const handleSearch = async () => {
+    try {
+      const response = await axios.post(`${apiUrl}/players/find_specific`, {
+        name: searchTerm,
+      });
+      if (response.data.length != 0) {
+        setPlayers(response.data);
+      } else {
+        alert("No se encontraron jugadores con ese nombre");
+        reson();
+      }
+    } catch (error) {
+      console.log("An error occurred while searching for teams", error);
+    }
+  };
+
   const onClickCreate = () => {
+    resetFormData();
     setCreatePlayer(true);
     setEditPlayer(false);
   };
@@ -128,7 +172,7 @@ const Players = () => {
 
   const onClickEdit = (player) => {
     setBeforeName(player.name);
-    setFormData(player);
+    setFormData({ ...player, newTeam: "" });
     setEditPlayer(true);
     setCreatePlayer(false);
   };
@@ -140,6 +184,13 @@ const Players = () => {
         <button onClick={handleBackButtonClick}>Back To Main</button>
         <button onClick={onClickCreate}>Create</button>
         <button onClick={onClickShow}>Show Players</button>
+        <input
+          type="text"
+          placeholder="Search by team name"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <button onClick={handleSearch}>Search</button>
       </div>
 
       {createPlayer == true && editPlayer == false ? (
@@ -355,14 +406,14 @@ const Players = () => {
               <input
                 type="text"
                 name="team"
-                value={formData.team}
+                value={formData.newTeam}
                 onChange={(e) =>
-                  setFormData({ ...formData, team: e.target.value })
+                  setFormData({ ...formData, newTeam: e.target.value })
                 }
               />
             </label>
             <button type="submit" onClick={handleSubmitUpdate}>
-              Create
+              Update
             </button>
           </form>
         </div>
@@ -411,6 +462,12 @@ const Players = () => {
                   <td>
                     <div>
                       <button
+                        style={{ backgroundColor: "black" }}
+                        onClick={() => onClickEdit(player)}
+                      >
+                        Actualizar
+                      </button>
+                      <button
                         style={{ backgroundColor: "red" }}
                         onClick={async () => {
                           deletePlayer(
@@ -419,13 +476,7 @@ const Players = () => {
                           );
                         }}
                       >
-                        eliminar
-                      </button>
-                      <button
-                        style={{ backgroundColor: "grey" }}
-                        onClick={() => onClickEdit(player)}
-                      >
-                        En espera
+                        Eliminar
                       </button>
                     </div>
                   </td>
