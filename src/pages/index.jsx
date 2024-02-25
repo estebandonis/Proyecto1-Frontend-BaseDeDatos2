@@ -4,6 +4,7 @@ import { default as Games } from "./Games";
 import { default as Players } from "./Players";
 import { default as Teams } from "./Teams";
 import { default as AddTeams } from "./AddTeams";
+import { default as PlayersStats } from "./PlayersStats";
 import { routerKey } from "@storeon/router";
 
 const Page = () => {
@@ -25,6 +26,9 @@ const Page = () => {
       break;
     case "addteams":
       Component = <AddTeams />;
+      break;
+    case "playersstats":
+      Component = <PlayersStats />;
       break;
     default:
       Component = <h1>404 Error</h1>;

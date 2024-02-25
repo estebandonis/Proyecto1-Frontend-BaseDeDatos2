@@ -5,5 +5,6 @@ export default createRouter([
   ["/games", () => ({ page: "games" })],
   ["/players", () => ({ page: "players" })],
   ["/teams", () => ({ page: "teams" })],
-  ["/addteams", () => ({ page: "addteams" })], 
+  ["/addteams", () => ({ page: "addteams" })],
+  ["/playersstats", () => ({ page: "playersstats" })],
 ]);

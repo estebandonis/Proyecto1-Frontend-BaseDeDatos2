@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useApi } from "@hooks";
+import { navigate } from "@store";
 import stiles from "./Players.module.css";
 
 const ITEMS_PER_PAGE = 15;
@@ -184,6 +185,9 @@ const Players = () => {
         <button onClick={handleBackButtonClick}>Back To Main</button>
         <button onClick={onClickCreate}>Create</button>
         <button onClick={onClickShow}>Show Players</button>
+        <button onClick={() => navigate("/playersstats")}>
+          Player's Stats
+        </button>
         <input
           type="text"
           placeholder="Search by team name"
@@ -442,8 +446,9 @@ const Players = () => {
                 <th>Nombre</th>
                 <th>Height</th>
                 <th>Position</th>
-                <th>Stats</th>
+                <th>Average Points</th>
                 <th>Weight</th>
+                <th>Current Team</th>
               </tr>
             </thead>
             <tbody>
@@ -453,12 +458,12 @@ const Players = () => {
                     {player.name.first_name} {player.name.last_name}
                   </td>
                   <td>
-                    {player.height.height_feet}
-                    {player.height.height_inches}
+                    {player.height.height_feet}'{player.height.height_inches}
                   </td>
                   <td>{player.position}</td>
-                  <td>{player.stats[0]}</td>
+                  <td>{player.stats[18]}</td>
                   <td>{player.weight_pounds}</td>
+                  <td>{player.team_name}</td>
                   <td>
                     <div>
                       <button
