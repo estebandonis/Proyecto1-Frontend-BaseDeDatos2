@@ -5,20 +5,16 @@ import stiles from "./Games.module.css";
 
 const ITEMS_PER_PAGE = 15;
 const FORM_DEFAULT = {
-      // _id: "",
+      _id: "",
       date : "",
       season : "",
       period : "",
       status : "",
       postseason : "",
-      home_team : {
-        name : "",
-        score : ""
-      },
-      visitor_team : {
-        name : "",
-        score : ""
-      }
+      home_name: "",
+      home_score: "",
+      visitor_name: "",
+      visitor_score : ""
     }
 
 const Games = () => {
@@ -33,52 +29,6 @@ const Games = () => {
     currentPage * ITEMS_PER_PAGE,
     (currentPage + 1) * ITEMS_PER_PAGE,
   );
-
-  const handleBackButtonClick = () => {
-    window.history.back();
-  };
-  
-  const handleBackButton = () => {
-    setCurrentPage((oldPage) => Math.max(oldPage - 1, 0));
-  };
-
-  const handleNextButton = () => {
-    setCurrentPage((oldPage) => oldPage + 1);
-  };
-  
-  const deleteGame = async (id) => {
-    try {
-      await axios.delete(`${apiUrl}/teams/delete/${id}`);
-      // Después de eliminar el equipo, volvemos a cargar la lista de equipos
-      fetchTeams();
-    } catch (error) {
-      console.log("An error occurred while deleting team", error);
-    }
-  };
-
-  const updateGame = (game) => {
-    setFormData(game);
-    setSubmitGame(true);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault(); // prevent default form submission
-
-    try {
-      if (games._id == "") {
-        await axios.post(`${apiUrl}/games/create`, formData);
-      } else {
-        await axios.put(`${apiUrl}/games/update`, formData);
-      }
-      reson();
-      setSubmitGame(false);
-      setFormData(FORM_DEFAULT);
-      alert("Se ha agregado el jugador exitosamente");
-    } catch (error) {
-      // handle error here
-      alert("No se pudo agregar el jugador", error);
-    }
-  };
 
   const reson = async () => {
     await axios
@@ -96,6 +46,57 @@ const Games = () => {
   useEffect(() => {
     reson();
   }, []);
+
+  const handleBackButtonClick = () => {
+    window.history.back();
+  };
+  
+  const handleBackButton = () => {
+    setCurrentPage((oldPage) => Math.max(oldPage - 1, 0));
+  };
+
+  const handleNextButton = () => {
+    setCurrentPage((oldPage) => oldPage + 1);
+  };
+  
+  const deleteGame = async (id) => {
+    try {
+      await axios.delete(`${apiUrl}/games/delete/${id}`);
+      // Después de eliminar el equipo, volvemos a cargar la lista de equipos
+      reson();
+      alert("Juego removido exitosamente");
+    } catch (error) {
+      console.log("An error occurred while deleting game", error);
+    }
+  };
+
+  const updateGame = (game) => {
+    setFormData(game);
+    console.log(formData);
+    setSubmitGame(true);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // prevent default form submission
+
+    console.log(formData);
+    try {
+      if (formData._id == "") {
+        await axios.post(`${apiUrl}/games/create`, formData);
+      } else {
+        await axios.put(`${apiUrl}/games/update`, formData);
+      }
+      reson();
+      setSubmitGame(false);
+      setFormData(FORM_DEFAULT);
+      alert("Se ha subido la informacion exitosamente");
+    } catch (error) {
+      // handle error here
+      alert("No se pudo subir la informacion.", error);
+      setSubmitGame(false);
+      setFormData(FORM_DEFAULT);
+    }
+  };
 
   return (
     <div className={stiles.bigStyles}>
@@ -154,45 +155,33 @@ const Games = () => {
             </label>
             <label>
               Home Team Name:
-              <input type="text" name="home_team_name" value={formData.home_team.name}
+              <input type="text" name="home_team_name" value={formData.home_name}
                 onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    home_team: { ...formData.home_team, name: e.target.value },
-                  })
+                  setFormData({ ...formData, home_name: e.target.value })
                 }
               />
             </label>
             <label>
               Home Team Score:
-              <input type="text" name="home_team_score" value={formData.home_team.score}
+              <input type="text" name="home_team_score" value={formData.home_score}
                 onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    home_team: { ...formData.home_team, score: e.target.value },
-                  })
+                  setFormData({ ...formData, home_score: e.target.value })
                 }
               />
             </label>
             <label>
               Visitor Team Name:
-              <input type="text" name="visitor_team_name" value={formData.visitor_team.name}
+              <input type="text" name="visitor_team_name" value={formData.visitor_name}
                 onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    visitor_team: { ...formData.visitor_team, name: e.target.value },
-                  })
+                  setFormData({ ...formData, visitor_name: e.target.value })
                 }
               />
             </label>
             <label>
               Visitor Team Score:
-              <input type="text" name="visitor_team_score" value={formData.home_team.score}
+              <input type="text" name="visitor_team_score" value={formData.visitor_score}
                 onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    visitor_team: { ...formData.visitor_team, score: e.target.value },
-                  })
+                  setFormData({ ...formData, visitor_score: e.target.value })
                 }
               />
             </label>
@@ -235,11 +224,11 @@ const Games = () => {
                   <td>{game.season}</td>
                   <td>{game.period}</td>
                   <td>{game.status}</td>
-                  <td>{game.postseason}</td>
-                  <td>{game.home_team.name}</td>
-                  <td>{game.home_team.score}</td>
-                  <td>{game.visitor_team.name}</td>
-                  <td>{game.visitor_team.score}</td>
+                  <td>{game.postseason.toString()}</td>
+                  <td>{game.home_name}</td>
+                  <td>{game.home_score}</td>
+                  <td>{game.visitor_name}</td>
+                  <td>{game.visitor_score}</td>
                   <td>
                     <div>
                       <button
