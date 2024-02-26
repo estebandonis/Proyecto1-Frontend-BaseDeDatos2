@@ -25,14 +25,11 @@ const Games = () => {
 
   const [formData, setFormData] = useState(FORM_DEFAULT)
   
-  const gamesToShow = games.slice(
-    currentPage * ITEMS_PER_PAGE,
-    (currentPage + 1) * ITEMS_PER_PAGE,
-  );
+  const gamesToShow = currentPage * ITEMS_PER_PAGE
 
   const reson = async () => {
     await axios
-      .get(`${apiUrl}/games/find`)
+      .get(`${apiUrl}/games/find/${gamesToShow}`)
       .then((response) => {
         setGames(response.data);
         console.log(response.data);
@@ -53,10 +50,12 @@ const Games = () => {
   
   const handleBackButton = () => {
     setCurrentPage((oldPage) => Math.max(oldPage - 1, 0));
+    reson();
   };
 
   const handleNextButton = () => {
     setCurrentPage((oldPage) => oldPage + 1);
+    reson();
   };
   
   const deleteGame = async (id) => {
@@ -106,7 +105,7 @@ const Games = () => {
       <div className={stiles.botonesSection}>
         <button onClick={handleBackButtonClick}>Back To Main</button>
         <button onClick={() => setSubmitGame(!submitGame)}>Insert</button>
-        <button onClick={() => setSubmitGame(false)}>Show Players</button>
+        <button onClick={() => setSubmitGame(false)}>Show Games</button>
       </div>
 
       {submitGame == true ? (
@@ -218,7 +217,7 @@ const Games = () => {
               </tr>
             </thead>
             <tbody>
-              {gamesToShow.map((game, index) => (
+              {games.map((game, index) => (
                 <tr key={index}>
                   <td>{game.date}</td>
                   <td>{game.season}</td>
