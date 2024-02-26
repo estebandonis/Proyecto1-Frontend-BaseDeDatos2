@@ -22,6 +22,8 @@ const Games = () => {
   const [games, setGames] = useState([]);
   const [submitGame, setSubmitGame] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
+  const [sortField, setSortField] = useState("date");
+  const [sortOrder, setSortOrder] = useState(-1);
 
   const [formData, setFormData] = useState(FORM_DEFAULT)
   
@@ -29,7 +31,7 @@ const Games = () => {
 
   const reson = async () => {
     await axios
-      .get(`${apiUrl}/games/find/${gamesToShow}`)
+      .get(`${apiUrl}/games/find/${gamesToShow}/${sortField}/${sortOrder}`)
       .then((response) => {
         setGames(response.data);
         console.log(response.data);
@@ -42,7 +44,7 @@ const Games = () => {
 
   useEffect(() => {
     reson();
-  }, []);
+  }, [sortField, sortOrder]);
 
   const handleBackButtonClick = () => {
     window.history.back();
@@ -106,6 +108,19 @@ const Games = () => {
         <button onClick={handleBackButtonClick}>Back To Main</button>
         <button onClick={() => setSubmitGame(!submitGame)}>Insert</button>
         <button onClick={() => setSubmitGame(false)}>Show Games</button>
+        <select onChange={(e) => setSortField(e.target.value)}>
+          <option value="date">date</option>
+          <option value="season">season</option>
+          <option value="period">period</option>
+          <option value="home_name">home team name</option>
+          <option value="home_score">home team score</option>
+          <option value="visitor_name">visitor team name</option>
+          <option value="visitor_score">visitor team score</option>
+        </select>
+        <select onChange={(e) => setSortOrder(e.target.value)}>
+          <option value={-1}>Descendente</option>
+          <option value={1}>Ascendente</option>
+        </select>
       </div>
 
       {submitGame == true ? (
