@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useApi } from "@hooks";
 import { navigate } from "@store";
@@ -15,6 +15,21 @@ const AddTeam = () => {
     founded: "",
     logo: ""
   });
+  const [teamsCount, setTeamsCount] = useState(0);
+
+  useEffect(() => {
+    const fetchTeamsCount = async () => {
+      try {
+        const response = await axios.get(`${apiUrl}/teams`);
+        const count = response.data.length;
+        setTeamsCount(count);
+      } catch (error) {
+        console.error("Error fetching teams count:", error);
+      }
+    };
+
+    fetchTeamsCount();
+  }, [apiUrl]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -54,7 +69,12 @@ const AddTeam = () => {
       return;
     }
 
+
     try {
+      if (teamsCount >= 35) {
+        alert("Se ha alcanzado la máxima capacidad de equipos (35)");
+        return;
+      }
       await axios.post(`${apiUrl}/teams/create`, teamData);
       alert('Equipo añadido correctamente');
       navigate("/teams");
