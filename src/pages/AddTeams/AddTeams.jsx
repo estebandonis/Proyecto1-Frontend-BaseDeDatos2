@@ -21,8 +21,39 @@ const AddTeam = () => {
     setTeamData({ ...teamData, [name]: value });
   };
 
+  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validar la longitud del nombre
+    if (teamData.name.length > 250) {
+      alert('El nombre debe tener como máximo 250 caracteres');
+      return;
+    }
+
+    // Validar la longitud de la abreviatura
+    if (teamData.abbreviation.length > 5) {
+      alert('La abreviatura debe tener como máximo 5 caracteres');
+      return;
+    }
+
+    // Validar la longitud de la ciudad, división y conferencia
+    if (
+      teamData.city.length > 100 ||
+      teamData.division.length > 100 ||
+      teamData.conference.length > 100
+    ) {
+      alert('La ciudad, división y conferencia deben tener como máximo 100 caracteres');
+      return;
+    }
+
+    // Validar la longitud de "fundado"
+    if (teamData.founded.length > 4) {
+      alert('El año de fundación debe tener como máximo 4 números');
+      return;
+    }
+
     try {
       await axios.post(`${apiUrl}/teams/create`, teamData);
       alert('Equipo añadido correctamente');
