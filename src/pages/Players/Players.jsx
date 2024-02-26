@@ -13,6 +13,8 @@ const Players = () => {
   const [editPlayer, setEditPlayer] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
+  const [sort, setSort] = useState("averagePoints");
+  const [num, setNum] = useState(-1);
   const [beforeName, setBeforeName] = useState({
     name: {
       first_name: "",
@@ -40,8 +42,9 @@ const Players = () => {
   };
 
   const reson = async () => {
+    console.log(sort, num)
     await axios
-      .get(`${apiUrl}/players/find`)
+      .post(`${apiUrl}/players/find`, { sort: sort, num: num })
       .then((response) => {
         setPlayers(response.data);
       })
@@ -56,8 +59,8 @@ const Players = () => {
   }, []);
 
   useEffect(() => {
-    console.log(formData);
-  }, [formData]);
+    reson();
+  }, [sort, num]);
 
   const handleBackButton = () => {
     setCurrentPage((oldPage) => Math.max(oldPage - 1, 0));
@@ -178,6 +181,15 @@ const Players = () => {
     setCreatePlayer(false);
   };
 
+  const handleSortChange = async (value) => {
+    setSort(value.target.value)
+  }
+
+  const handleNumChange = async (value) => {
+    const numero = Number(value.target.value)
+    setNum(numero)
+  }
+
   return (
     <div className={stiles.bigStyles}>
       <h1>Players</h1>
@@ -188,6 +200,21 @@ const Players = () => {
         <button onClick={() => navigate("/playersstats")}>
           Player's Stats
         </button>
+
+        {createPlayer == false && editPlayer == false ? (
+          <div>
+            <select onChange={handleSortChange}>
+          <option value="averagePoints">Average Points</option>
+          <option value="name">Name</option>
+          <option value="weight_pounds">Weight</option>
+          <option value="height">Height</option>
+          <option value="position">Position</option>
+          <option value="team_name">Team</option>
+        </select>
+        <select onChange={handleNumChange}>
+          <option value="-1">Descendente</option>
+          <option value="1">Ascendente</option>
+        </select>
         <input
           type="text"
           placeholder="Search by team name"
@@ -195,6 +222,8 @@ const Players = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
         <button onClick={handleSearch}>Search</button>
+          </div>
+        ) : null}
       </div>
 
       {createPlayer == true && editPlayer == false ? (
