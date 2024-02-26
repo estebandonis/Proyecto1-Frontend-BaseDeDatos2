@@ -67,6 +67,33 @@ const Teams = () => {
   };
 
   const handleSave = async () => {
+    // Validar la longitud del nombre
+    if (updatedTeam.name.length > 250) {
+      alert('El nombre debe tener como máximo 250 caracteres');
+      return;
+    }
+
+    // Validar la longitud de la abreviatura
+    if (updatedTeam.abbreviation.length > 5) {
+      alert('La abreviatura debe tener como máximo 5 caracteres');
+      return;
+    }
+
+    // Validar la longitud de la ciudad, división y conferencia
+    if (
+      updatedTeam.city.length > 100 ||
+      updatedTeam.division.length > 100 ||
+      updatedTeam.conference.length > 100
+    ) {
+      alert('La ciudad, división y conferencia deben tener como máximo 100 caracteres');
+      return;
+    }
+
+    // Validar la longitud de "fundado"
+    if (updatedTeam.founded.length > 4) {
+      alert('El año de fundación debe tener como máximo 4 números');
+      return;
+    }
     try {
       await axios.put(`${apiUrl}/teams/update/${selectedTeam._id}`, updatedTeam);
       fetchTeams();
