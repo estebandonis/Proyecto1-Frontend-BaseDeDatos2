@@ -20,7 +20,11 @@ const FORM_DEFAULT = {
 const Games = () => {
   const { apiUrl } = useApi();
   const [games, setGames] = useState([]);
+  const [winStats, setWinStats] = useState([]);
+  const [loseStats, setLoseStats] = useState([]);
+  const [statPage, setStatPage] = useState("wins");
   const [submitGame, setSubmitGame] = useState(false);
+  const [teamStats, setTeamStats] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [sortField, setSortField] = useState("date");
   const [sortOrder, setSortOrder] = useState(-1);
@@ -34,6 +38,28 @@ const Games = () => {
       .get(`${apiUrl}/games/find/${gamesToShow}/${sortField}/${sortOrder}`)
       .then((response) => {
         setGames(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        // Handle the error
+        console.log("An error occurred while retrieving data", error);
+      });
+
+    await axios
+      .get(`${apiUrl}/games/stats/wins`)
+      .then((response) => {
+        setWinStats(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        // Handle the error
+        console.log("An error occurred while retrieving data", error);
+      });
+
+    await axios
+      .get(`${apiUrl}/games/stats/loses`)
+      .then((response) => {
+        setLoseStats(response.data);
         console.log(response.data);
       })
       .catch((error) => {
@@ -99,6 +125,10 @@ const Games = () => {
     }
   };
 
+  const showGames = () => {
+
+  }
+
   return (
     <div className={stiles.bigStyles}>
       <div className={stiles.styles}>
@@ -106,8 +136,9 @@ const Games = () => {
       </div>
       <div className={stiles.botonesSection}>
         <button onClick={handleBackButtonClick}>Back To Main</button>
-        <button onClick={() => setSubmitGame(!submitGame)}>Insert</button>
-        <button onClick={() => setSubmitGame(false)}>Show Games</button>
+        <button onClick={() => {setSubmitGame(!submitGame); setTeamStats(false)}}>Insert</button>
+        <button onClick={() => {setSubmitGame(false); setTeamStats(false)}}>Show Games</button>
+        <button onClick={() => {setTeamStats(!teamStats); setSubmitGame(false)}}>Show Team Stats</button>
         <select onChange={(e) => setSortField(e.target.value)}>
           <option value="date">date</option>
           <option value="season">season</option>
@@ -206,7 +237,50 @@ const Games = () => {
         </div>
       ) : null}
 
-      {games && games.length > 0 && submitGame == false ? (
+      {teamStats == true ? (
+        <div>
+          <select onChange={(e) => {setStatPage(e.target.value)}}>
+            <option value="wins">Wins</option>
+            <option value="loses">Loses</option>
+          </select>
+          { statPage == "wins" ? (
+          <table>
+            <thead>
+              <tr>
+                <th>Team</th>
+                <th>Wins</th>
+              </tr>
+            </thead>
+            <tbody>
+              {winStats.map((team, index) => (
+                <tr key={index}>
+                  <td>{team.team_name}</td>
+                  <td>{team.wins}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>): null}
+          { statPage == "loses" ? (
+          <table>
+            <thead>
+              <tr>
+                <th>Team</th>
+                <th>Loses</th>
+              </tr>
+            </thead>
+            <tbody>
+              {loseStats.map((team, index) => (
+                <tr key={index}>
+                  <td>{team.team_name}</td>
+                  <td>{team.loses}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>): null}
+        </div>
+      ): null}
+
+      {games && games.length > 0 && submitGame == false && teamStats == false ? (
         <div>
           <div>
             <button onClick={handleBackButton} disabled={currentPage === 0}>
