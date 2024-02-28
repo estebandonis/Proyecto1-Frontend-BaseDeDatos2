@@ -221,111 +221,119 @@ const Players = () => {
       </div>
 
       {createPlayer == true && editPlayer == false ? (
-        <div className={stiles.createPlayerSection}>
+        <div>
           <form>
-            <label>
-              First Name:
-              <input
-                type="text"
-                name="first_name"
-                value={formData.name.first_name}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    name: { ...formData.name, first_name: e.target.value },
-                  })
-                }
-              />
-            </label>
-            <label>
-              Last Name:
-              <input
-                type="text"
-                name="last_name"
-                value={formData.name.last_name}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    name: { ...formData.name, last_name: e.target.value },
-                  })
-                }
-              />
-            </label>
-            <label>
-              Height Feet:
-              <input
-                type="text"
-                name="height_feet"
-                value={formData.height.height_feet}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    height: { ...formData.height, height_feet: e.target.value },
-                  })
-                }
-              />
-            </label>
-            <label>
-              Height Inches:
-              <input
-                type="text"
-                name="height_inches"
-                value={formData.height.height_inches}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    height: {
-                      ...formData.height,
-                      height_inches: e.target.value,
-                    },
-                  })
-                }
-              />
-            </label>
-            <label>
-              Weight Pounds:
-              <input
-                type="text"
-                name="weight_pounds"
-                value={formData.weight_pounds}
-                onChange={(e) =>
-                  setFormData({ ...formData, weight_pounds: e.target.value })
-                }
-              />
-            </label>
-            <label>
-              Position:
-              <input
-                type="text"
-                name="position"
-                value={formData.position}
-                onChange={(e) =>
-                  setFormData({ ...formData, position: e.target.value })
-                }
-              />
-            </label>
-            <label>
-              Stats:
-              <input
-                type="text"
-                name="stats"
-                value={formData.stats}
-                onChange={(e) =>
-                  setFormData({ ...formData, stats: e.target.value })
-                }
-              />
-            </label>
-            <label>
-              Team:
-              <input
-                type="text"
-                name="team"
-                value={formData.team}
-                onChange={(e) =>
-                  setFormData({ ...formData, team: e.target.value })
-                }
-              />
-            </label>
+            <div className={stiles.createPlayerSection}>
+              <div className={stiles.one}>
+                <label>
+                  First Name:
+                  <input
+                    type="text"
+                    name="first_name"
+                    value={formData.name.first_name}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        name: { ...formData.name, first_name: e.target.value },
+                      })
+                    }
+                  />
+                </label>
+                <label>
+                  Last Name:
+                  <input
+                    type="text"
+                    name="last_name"
+                    value={formData.name.last_name}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        name: { ...formData.name, last_name: e.target.value },
+                      })
+                    }
+                  />
+                </label>
+                <label>
+                  Height Feet:
+                  <input
+                    type="text"
+                    name="height_feet"
+                    value={formData.height.height_feet}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        height: { ...formData.height, height_feet: e.target.value },
+                      })
+                    }
+                  />
+                </label>
+                <label>
+                  Height Inches:
+                  <input
+                    type="text"
+                    name="height_inches"
+                    value={formData.height.height_inches}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        height: {
+                          ...formData.height,
+                          height_inches: e.target.value,
+                        },
+                      })
+                    }
+                  />
+                </label>
+                </div>
+                <div className={stiles.two}>
+                <label>
+                  Weight Pounds:
+                  <input
+                    type="text"
+                    name="weight_pounds"
+                    value={formData.weight_pounds}
+                    onChange={(e) =>
+                      setFormData({ ...formData, weight_pounds: e.target.value })
+                    }
+                  />
+                </label>
+                <label>
+                  Position:
+                  <input
+                    type="text"
+                    name="position"
+                    value={formData.position}
+                    onChange={(e) =>
+                      setFormData({ ...formData, position: e.target.value })
+                    }
+                  />
+                </label>
+                <label>
+                  Team:
+                  <input
+                    type="text"
+                    name="team"
+                    value={formData.team}
+                    onChange={(e) =>
+                      setFormData({ ...formData, team: e.target.value })
+                    }
+                  />
+                </label>
+              </div>
+              <div className={stiles.stats}>
+                <label>
+                  Stats:
+                </label>
+                <input
+                  type="text"
+                  name="stats"
+                  value={formData.stats}
+                  onChange={(e) =>
+                    setFormData({ ...formData, stats: e.target.value })
+                  }
+                />
+              </div>
+            </div>
             <button type="submit" onClick={handleSubmit}>
               Create
             </button>
@@ -334,111 +342,119 @@ const Players = () => {
       ) : null}
 
       {editPlayer == true && createPlayer == false ? (
-        <div className={stiles.createPlayerSection}>
+        <div>
           <form>
-            <label>
-              First Name:
-              <input
-                type="text"
-                name="first_name"
-                value={formData.name.first_name}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    name: { ...formData.name, first_name: e.target.value },
-                  })
-                }
-              />
-            </label>
-            <label>
-              Last Name:
-              <input
-                type="text"
-                name="last_name"
-                value={formData.name.last_name}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    name: { ...formData.name, last_name: e.target.value },
-                  })
-                }
-              />
-            </label>
-            <label>
-              Height Feet:
-              <input
-                type="text"
-                name="height_feet"
-                value={formData.height.height_feet}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    height: { ...formData.height, height_feet: e.target.value },
-                  })
-                }
-              />
-            </label>
-            <label>
-              Height Inches:
-              <input
-                type="text"
-                name="height_inches"
-                value={formData.height.height_inches}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    height: {
-                      ...formData.height,
-                      height_inches: e.target.value,
-                    },
-                  })
-                }
-              />
-            </label>
-            <label>
-              Weight Pounds:
-              <input
-                type="text"
-                name="weight_pounds"
-                value={formData.weight_pounds}
-                onChange={(e) =>
-                  setFormData({ ...formData, weight_pounds: e.target.value })
-                }
-              />
-            </label>
-            <label>
-              Position:
-              <input
-                type="text"
-                name="position"
-                value={formData.position}
-                onChange={(e) =>
-                  setFormData({ ...formData, position: e.target.value })
-                }
-              />
-            </label>
-            <label>
-              Stats:
-              <input
-                type="text"
-                name="stats"
-                value={formData.stats}
-                onChange={(e) =>
-                  setFormData({ ...formData, stats: e.target.value })
-                }
-              />
-            </label>
-            <label>
-              Team:
-              <input
-                type="text"
-                name="team"
-                value={formData.newTeam}
-                onChange={(e) =>
-                  setFormData({ ...formData, newTeam: e.target.value })
-                }
-              />
-            </label>
+          <div className={stiles.createPlayerSection}>
+              <div className={stiles.one}>
+                <label>
+                  First Name:
+                  <input
+                    type="text"
+                    name="first_name"
+                    value={formData.name.first_name}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        name: { ...formData.name, first_name: e.target.value },
+                      })
+                    }
+                  />
+                </label>
+                <label>
+                  Last Name:
+                  <input
+                    type="text"
+                    name="last_name"
+                    value={formData.name.last_name}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        name: { ...formData.name, last_name: e.target.value },
+                      })
+                    }
+                  />
+                </label>
+                <label>
+                  Height Feet:
+                  <input
+                    type="text"
+                    name="height_feet"
+                    value={formData.height.height_feet}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        height: { ...formData.height, height_feet: e.target.value },
+                      })
+                    }
+                  />
+                </label>
+                <label>
+                  Height Inches:
+                  <input
+                    type="text"
+                    name="height_inches"
+                    value={formData.height.height_inches}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        height: {
+                          ...formData.height,
+                          height_inches: e.target.value,
+                        },
+                      })
+                    }
+                  />
+                </label>
+                </div>
+                <div className={stiles.two}>
+                <label>
+                  Weight Pounds:
+                  <input
+                    type="text"
+                    name="weight_pounds"
+                    value={formData.weight_pounds}
+                    onChange={(e) =>
+                      setFormData({ ...formData, weight_pounds: e.target.value })
+                    }
+                  />
+                </label>
+                <label>
+                  Position:
+                  <input
+                    type="text"
+                    name="position"
+                    value={formData.position}
+                    onChange={(e) =>
+                      setFormData({ ...formData, position: e.target.value })
+                    }
+                  />
+                </label>
+                <label>
+                  Team:
+                  <input
+                    type="text"
+                    name="team"
+                    value={formData.team}
+                    onChange={(e) =>
+                      setFormData({ ...formData, team: e.target.value })
+                    }
+                  />
+                </label>
+              </div>
+              <div className={stiles.stats}>
+                <label>
+                  Stats:
+                </label>
+                <input
+                  type="text"
+                  name="stats"
+                  value={formData.stats}
+                  onChange={(e) =>
+                    setFormData({ ...formData, stats: e.target.value })
+                  }
+                />
+              </div>
+            </div>
             <button type="submit" onClick={handleSubmitUpdate}>
               Update
             </button>
