@@ -6,6 +6,7 @@ import stiles from "./PlayersStats.module.css";
 const PlayersStats = () => {
   const { apiUrl } = useApi();
   const [averages, setAverages] = useState([]);
+  const [mvps, setMvps] = useState([]);
 
   const handleBackButtonClick = () => {
     window.history.back();
@@ -24,8 +25,21 @@ const PlayersStats = () => {
       });
   };
 
+  const getMVPs = async () => {
+    await axios
+      .get(`${apiUrl}/players/find/mvpRace`)
+      .then((response) => {
+        setMvps(response.data);
+      })
+      .catch((error) => {
+        // Handle the error
+        console.log("An error occurred while retrieving data", error);
+      });
+  };
+
   useEffect(() => {
     getAvgPoints();
+    getMVPs();
   }, []);
 
   return (
@@ -78,6 +92,25 @@ const PlayersStats = () => {
           <td>{averages.averageFGP}</td>
           <td>{averages.averageFG3P}</td>
           <td>{averages.averageFTP}</td>
+        </tbody>
+      </table>
+
+      <h2>MVP Race</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Player</th>
+            <th>MVP Score</th>
+          </tr>
+        </thead>
+        <tbody>
+          {mvps.map((player, index) => (
+            <tr key={index}>
+              <td>{player.name.first_name} {player.name.last_name}</td>
+              <td>{player.mvpScore}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>

@@ -42,7 +42,6 @@ const Players = () => {
   };
 
   const reson = async () => {
-    console.log(sort, num)
     await axios
       .post(`${apiUrl}/players/find`, { sort: sort, num: num })
       .then((response) => {
@@ -92,24 +91,19 @@ const Players = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // prevent default form submission
-
     try {
       await axios.post(`${apiUrl}/players/create`, formData);
       reson();
       setCreatePlayer(false);
       alert("Se ha agregado el jugador exitosamente");
     } catch (error) {
-      // handle error here
-      alert("No se pudo agregar el jugador", error);
+      alert(error.response.data.message);
     }
   };
 
   const handleSubmitUpdate = async (e) => {
     e.preventDefault(); // prevent default form submission
     try {
-      console.log(formData);
-      console.log(formData.team);
-      console.log(formData.team_id);
       await axios.put(`${apiUrl}/players/update`, {
         name: formData.name,
         position: formData.position,
@@ -182,13 +176,13 @@ const Players = () => {
   };
 
   const handleSortChange = async (value) => {
-    setSort(value.target.value)
-  }
+    setSort(value.target.value);
+  };
 
   const handleNumChange = async (value) => {
-    const numero = Number(value.target.value)
-    setNum(numero)
-  }
+    const numero = Number(value.target.value);
+    setNum(numero);
+  };
 
   return (
     <div className={stiles.bigStyles}>
@@ -204,24 +198,24 @@ const Players = () => {
         {createPlayer == false && editPlayer == false ? (
           <div>
             <select onChange={handleSortChange}>
-          <option value="averagePoints">Average Points</option>
-          <option value="name">Name</option>
-          <option value="weight_pounds">Weight</option>
-          <option value="height">Height</option>
-          <option value="position">Position</option>
-          <option value="team_name">Team</option>
-        </select>
-        <select onChange={handleNumChange}>
-          <option value="-1">Descendente</option>
-          <option value="1">Ascendente</option>
-        </select>
-        <input
-          type="text"
-          placeholder="Search by team name"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <button onClick={handleSearch}>Search</button>
+              <option value="averagePoints">Average Points</option>
+              <option value="name">Name</option>
+              <option value="weight_pounds">Weight</option>
+              <option value="height">Height</option>
+              <option value="position">Position</option>
+              <option value="team_name">Team</option>
+            </select>
+            <select onChange={handleNumChange}>
+              <option value="-1">Descendente</option>
+              <option value="1">Ascendente</option>
+            </select>
+            <input
+              type="text"
+              placeholder="Search by team name"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <button onClick={handleSearch}>Search</button>
           </div>
         ) : null}
       </div>
