@@ -15,6 +15,8 @@ const Players = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [sort, setSort] = useState("averagePoints");
   const [num, setNum] = useState(-1);
+  const [arrayValue, setArrayValue] = useState(0);
+  const [fileContent, setFileContent] = useState(null);
   const [beforeName, setBeforeName] = useState({
     name: {
       first_name: "",
@@ -123,6 +125,50 @@ const Players = () => {
     }
   };
 
+  const addStat = async () => {
+
+    try {
+      await axios.put(`${apiUrl}/players/addStat`, {
+        name: formData.name,
+        num: arrayValue
+      });
+      reson();
+      alert("Se ha actualizado exitosamente");
+    } catch (error) {
+      // handle error here
+      alert("No se pudo agregar el jugador", error);
+    }
+  };
+
+  const deleteStat = async () => {
+    try {
+      await axios.put(`${apiUrl}/players/deleteStat`, {
+        name: formData.name
+      });
+      reson();
+      alert("Se ha actualizado exitosamente");
+    } catch (error) {
+      // handle error here
+      alert("No se pudo agregar el jugador", error);
+    }
+  };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = (event) => {
+      try {
+        const json = JSON.parse(event.target.result);
+        setFileContent(json);
+      } catch (error) {
+        console.log('Error parsing JSON file:', error);
+      }
+    };
+
+    reader.readAsText(file);
+  };
+
   const resetFormData = () => {
     setFormData({
       name: {
@@ -154,6 +200,16 @@ const Players = () => {
       }
     } catch (error) {
       console.log("An error occurred while searching for teams", error);
+    }
+  };
+
+  const addPlayers = async () => {
+    try {
+      await axios.post(`${apiUrl}/players/addPlayers`, fileContent);
+      reson();
+      alert("Se han agregado los jugadores exitosamente");
+    } catch (error) {
+      alert("No se pudo agregar el jugador", error);
     }
   };
 
@@ -337,6 +393,10 @@ const Players = () => {
             <button type="submit" onClick={handleSubmit}>
               Create
             </button>
+            <div>
+              <input type="file" accept=".json" onChange={handleFileChange} />
+              <button onClick={addPlayers}>Add Players</button>
+            </div>
           </form>
         </div>
       ) : null}
@@ -453,6 +513,9 @@ const Players = () => {
                     setFormData({ ...formData, stats: e.target.value })
                   }
                 />
+                <input type="text" value={arrayValue} onChange={(e) => setArrayValue(e.target.value)}/>
+                <button onClick={addStat}>Add Stat</button>
+                <button onClick={deleteStat}>Delete Stat</button>
               </div>
             </div>
             <button type="submit" onClick={handleSubmitUpdate}>
