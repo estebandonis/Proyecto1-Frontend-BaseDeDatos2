@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import { navigate } from "@store";
 import stiles from "./Home.module.css";
 

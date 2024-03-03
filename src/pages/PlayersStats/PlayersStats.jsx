@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useApi } from "@hooks";
+import { navigate } from "@store";
 import stiles from "./PlayersStats.module.css";
 
 const PlayersStats = () => {
@@ -9,7 +10,7 @@ const PlayersStats = () => {
   const [mvps, setMvps] = useState([]);
 
   const handleBackButtonClick = () => {
-    window.history.back();
+    navigate("/games")
   };
 
   const getAvgPoints = async () => {
@@ -37,18 +38,6 @@ const PlayersStats = () => {
       });
   };
 
-  const delete0GamesPlayer = async () => {
-    await axios
-      .post(`${apiUrl}/players/bulkwrite`, { first_name: "Carlos", last_name: "Gonzalez", newTeam: "Boston Celtics" })
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        // Handle the error
-        console.log("An error occurred while retrieving data", error);
-      });
-  }
-
   useEffect(() => {
     getAvgPoints();
     getMVPs();
@@ -59,8 +48,9 @@ const PlayersStats = () => {
       <h1>Players Stats</h1>
       <div className={stiles.botonesSection}>
         <button onClick={handleBackButtonClick}>Back To Players</button>
-        <button onClick={delete0GamesPlayer}>Delete 0 games player</button>
       </div>
+
+      <h2>League Averages</h2>
 
       <table>
         <thead>
