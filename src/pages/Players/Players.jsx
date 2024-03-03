@@ -105,6 +105,8 @@ const Players = () => {
 
   const handleSubmitUpdate = async (e) => {
     e.preventDefault(); // prevent default form submission
+
+    console.log("Data", formData);
     try {
       await axios.put(`${apiUrl}/players/update`, {
         name: formData.name,
@@ -494,9 +496,9 @@ const Players = () => {
                   <input
                     type="text"
                     name="team"
-                    value={formData.team}
+                    value={formData.newTeam}
                     onChange={(e) =>
-                      setFormData({ ...formData, team: e.target.value })
+                      setFormData({ ...formData, newTeam: e.target.value })
                     }
                   />
                 </label>
