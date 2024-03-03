@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useApi } from "@hooks";
+import { navigate } from "@store"
 import stiles from "./Games.module.css";
 
 const ITEMS_PER_PAGE = 15;
@@ -73,7 +74,7 @@ const Games = () => {
   }, [sortField, sortOrder]);
 
   const handleBackButtonClick = () => {
-    window.history.back();
+    navigate("/");
   };
   
   const handleBackButton = () => {

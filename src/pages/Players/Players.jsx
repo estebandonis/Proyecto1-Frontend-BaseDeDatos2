@@ -40,7 +40,7 @@ const Players = () => {
   });
 
   const handleBackButtonClick = () => {
-    window.history.back();
+    navigate("/");
   };
 
   const reson = async () => {

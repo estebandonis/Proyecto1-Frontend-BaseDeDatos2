@@ -10,7 +10,7 @@ const PlayersStats = () => {
   const [mvps, setMvps] = useState([]);
 
   const handleBackButtonClick = () => {
-    navigate("/games")
+    navigate("/players")
   };
 
   const getAvgPoints = async () => {
